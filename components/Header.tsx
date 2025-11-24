@@ -17,17 +17,10 @@ function Header() {
 
         <SignedIn>
           <div className="flex items-center gap-3 md:gap-4">
-            <Button
-              asChild
-              variant="outline"
-              className="hidden md:flex"
-              size="sm"
-            >
-              <Link href="/pricing">Pricing</Link>
-            </Button>
-            <Button asChild variant="outline" size="icon-sm">
+            <Button asChild variant="outline" size="lg">
               <Link href="/dashboard/upload" aria-label="Upload document">
                 <Plus className="h-4 w-4" />
+                Upload
               </Link>
             </Button>
             <ThemeToggle />

@@ -2,7 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { collection, orderBy, query } from "firebase/firestore";
-import { Bot, Loader2, Send, User } from "lucide-react";
+import { Bot, Check, Copy, Loader2, Send, User } from "lucide-react";
 import Image from "next/image";
 import {
   useCallback,
@@ -25,6 +25,7 @@ function Chat({ id }: { id: string }) {
   const [input, setInput] = useState("");
   const [isPending, startTransition] = useTransition();
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
+  const [copied, setCopied] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const prevMessagesLengthRef = useRef(0);
@@ -33,8 +34,8 @@ function Chat({ id }: { id: string }) {
     user &&
       query(
         collection(db, "users", user?.id, "files", id, "chat"),
-        orderBy("createdAt", "asc"),
-      ),
+        orderBy("createdAt", "asc")
+      )
   );
 
   const messages = useMemo<Message[]>(() => {
@@ -87,7 +88,7 @@ function Chat({ id }: { id: string }) {
       startTransition(async () => {
         const { success, message: errorMessage } = await askQuestion(
           id,
-          question,
+          question
         );
         setIsWaitingForResponse(false);
         if (!success) {
@@ -95,7 +96,7 @@ function Chat({ id }: { id: string }) {
         }
       });
     },
-    [input, id, isPending],
+    [input, id, isPending]
   );
 
   if (loading) {
@@ -138,7 +139,7 @@ function Chat({ id }: { id: string }) {
                 "flex gap-3 max-w-[85%]",
                 message.role === "human"
                   ? "ml-auto flex-row-reverse"
-                  : "mr-auto",
+                  : "mr-auto"
               )}
             >
               <div
@@ -146,7 +147,7 @@ function Chat({ id }: { id: string }) {
                   "shrink-0 size-8 rounded-full flex items-center justify-center",
                   message.role === "human"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground",
+                    : "bg-muted text-muted-foreground"
                 )}
               >
                 {message.role === "human" ? (
@@ -171,7 +172,7 @@ function Chat({ id }: { id: string }) {
                   "rounded-2xl px-4 py-2.5 shadow-sm",
                   message.role === "human"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-foreground",
+                    : "bg-muted text-foreground"
                 )}
               >
                 {message.message === "Thinking..." ? (
@@ -180,9 +181,30 @@ function Chat({ id }: { id: string }) {
                     <span className="text-sm">Thinking...</span>
                   </div>
                 ) : (
-                  <p className="text-sm whitespace-pre-wrap wrap-break-words">
+                  <div className="text-sm whitespace-pre-wrap wrap-break-words flex flex-col gap-2 relative">
+                    {message.role === "ai" && (
+                      <div className="absolute right-0 bottom-0">
+                        <Button
+                          variant={"ghost"}
+                          size={"icon"}
+                          onClick={() => {
+                            navigator.clipboard.writeText(message.message);
+                            setCopied(true);
+                            setTimeout(() => {
+                              setCopied(false);
+                            }, 2000);
+                          }}
+                        >
+                          {copied ? (
+                            <Check size={16} className="text-green-500" />
+                          ) : (
+                            <Copy size={16} />
+                          )}
+                        </Button>
+                      </div>
+                    )}
                     {message.message}
-                  </p>
+                  </div>
                 )}
               </div>
             </div>

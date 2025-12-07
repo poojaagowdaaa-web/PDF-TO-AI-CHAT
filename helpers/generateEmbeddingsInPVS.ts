@@ -23,7 +23,7 @@ export async function generateEmbeddingsInPineconeVectorStore(docId: string) {
 
   if (namespaceAlreadyExists) {
     console.log(
-      `----Namespace ${docId} already exists consider the previous embeddings----`,
+      `----Namespace ${docId} already exists consider the previous embeddings----`
     );
 
     pineconeVectorStore = await PineconeStore.fromExistingIndex(embeddings, {
@@ -36,7 +36,7 @@ export async function generateEmbeddingsInPineconeVectorStore(docId: string) {
     const splitDocs = await generateDocs(docId);
 
     console.log(
-      `---Storing the embeddings in namespace ${docId} in the Pinecone vector store---`,
+      `---Storing the embeddings in namespace ${docId} in the Pinecone vector store---`
     );
 
     pineconeVectorStore = await PineconeStore.fromDocuments(
@@ -45,7 +45,7 @@ export async function generateEmbeddingsInPineconeVectorStore(docId: string) {
       {
         pineconeIndex: index,
         namespace: docId,
-      },
+      }
     );
 
     return pineconeVectorStore;

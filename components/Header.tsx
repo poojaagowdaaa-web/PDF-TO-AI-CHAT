@@ -1,4 +1,4 @@
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import { Show, UserButton } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
@@ -15,7 +15,7 @@ function Header() {
           PDF to Chat
         </Link>
 
-        <SignedIn>
+        <Show when="signed-in">
           <div className="flex items-center gap-3 md:gap-4">
             <Button asChild variant="outline" size="lg">
               <Link href="/dashboard/upload" aria-label="Upload document">
@@ -26,7 +26,7 @@ function Header() {
             <ThemeToggle />
             <UserButton />
           </div>
-        </SignedIn>
+        </Show>
       </div>
     </header>
   );
